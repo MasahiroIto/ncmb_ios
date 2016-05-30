@@ -1,12 +1,12 @@
 /*
  Copyright 2014 NIFTY Corporation All Rights Reserved.
- 
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
- 
+
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -63,10 +63,9 @@ static NCMBUser *linkUser = nil;
     //ライブラリのコールバックを設定
     googleUtils = [[NCMBGoogleUtils alloc]init];
     [GIDSignIn sharedInstance].delegate = googleUtils;//コールバックに自身を設定
-    [GIDSignIn sharedInstance].allowsSignInWithWebView = NO;//webViewに遷移しないよう設定
     //ユーザへのコールバックを設定
     userBlock = block;
-    
+
     //認証済:アカウント画面に遷移しない。直接signInコールバックが実行される
     //未認証:アカウント画面に遷移する。承認後signInコールバックが実行される
     [[GIDSignIn sharedInstance] signIn];
@@ -82,7 +81,7 @@ static NCMBUser *linkUser = nil;
     NSInvocation* invocation = [ NSInvocation invocationWithMethodSignature: signature ];
     [ invocation setTarget:target];
     [ invocation setSelector: selector ];
-    
+
     [self logInWithGoogleAccountWithBlock:^(NCMBUser *user, NSError *error) {
         [ invocation setArgument:&user atIndex: 2 ];
         [ invocation setArgument:&error atIndex: 3 ];
@@ -108,11 +107,10 @@ static NCMBUser *linkUser = nil;
         }
         return;
     }
-    
+
     //ライブラリのコールバックを設定
     googleUtils = [[NCMBGoogleUtils alloc]init];
     [GIDSignIn sharedInstance].delegate = googleUtils;//コールバックに自身を設定
-    [GIDSignIn sharedInstance].allowsSignInWithWebView = NO;//webViewに遷移しないよう設定
     //ユーザへのコールバックを設定
     userBlock = block;
     linkUser = user;
@@ -159,7 +157,7 @@ static NCMBUser *linkUser = nil;
         }
         return;
     }
-    
+
     //UserのGoogle情報を取得し削除する
     if ([[user objectForKey:@"authData"] isKindOfClass:[NSDictionary class]]){
         NSMutableDictionary *authData = nil;
@@ -213,12 +211,12 @@ static NCMBUser *linkUser = nil;
 - (void)signIn:(GIDSignIn *)signIn didSignInForUser:(GIDGoogleUser *)user withError:(NSError *)error {
     if(error==nil){
         //認証成功:google情報を用いてmBaaSに会員登録を行う
-        
+
         //google情報作成
         NSDictionary *googleInfo = [NSMutableDictionary dictionary];
         [googleInfo setValue:user.userID forKey:AUTHDATA_ID_KEY];
         [googleInfo setValue:user.authentication.accessToken forKey:AUTHDATA_ACCESS_TOKEN_KEY];
-        
+
         if(linkUser){
             //リンクユーザ:Google認証のauthData(userID,accessToken)を既存AuthDataに追加して更新
             NCMBUser * user = linkUser;
